@@ -4,21 +4,26 @@ import com.vendingmachine.dto.Item;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
-public class VendingMachineServiceLayer {
-    private Map<String, Item> items;
+public class VendingMachineServiceLayer implements VendingServiceLayer{
+
+    //TODO - private dao,
+    private List<Item> items;
     private BigDecimal depositedAmount;
 
     // Constructor to initialize the service
+    //TODO (DAO) this.dao = dao
     public VendingMachineServiceLayer() {
-        this.items = new HashMap<>(); // Initialize the items map
-        this.depositedAmount = BigDecimal.ZERO; // Initialize the deposited amount to zero
+//        this.items = new HashMap<>(); // Initialize the items map
+//        this.depositedAmount = BigDecimal.ZERO; // Initialize the deposited amount to zero//to be rid
     }
 
     // Method to get the items map
-    public Map<String, Item> getItems() {
+    //TODO-ADD checks for different inputs
+    public List<Item> getItems() {
         return items;
     }
 
@@ -28,6 +33,7 @@ public class VendingMachineServiceLayer {
     }
 
     // Method to deposit money
+    //TODO check for valid input
     public void depositMoney(BigDecimal amount) {
         depositedAmount = depositedAmount.add(amount);
     }
