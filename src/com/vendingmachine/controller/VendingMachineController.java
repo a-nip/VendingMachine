@@ -8,8 +8,8 @@ import com.service.NoItemInventoryException;
 
 import com.vendingmachine.dao.VendingMachinePersistenceException;
 import com.vendingmachine.dto.Item;
+import com.vendingmachine.service.VendingMachineDataValidationException;
 import com.vendingmachine.service.VendingMachineServiceLayer;
-import com.vendingmachine.service.VendingMachineServiceLayerImpl;
 import com.vendingmachine.ui.VendingMachineView;
 
 
@@ -25,7 +25,7 @@ public class VendingMachineController {
     }
 
     // Start the vending machine
-    public void start() {
+    public void start() throws VendingMachinePersistenceException {
         displayItems(); // Display available items
         depositMoney(); // Prompt user to deposit money
         selectItem(); // Prompt user to select an item
@@ -45,7 +45,7 @@ public class VendingMachineController {
     }
 
     // Prompt user to deposit money
-    private void depositMoney() {
+    private void depositMoney() throws VendingMachineDataValidationException {
         System.out.print("Please deposit money (in dollars): ");
         BigDecimal amount = scanner.nextBigDecimal(); // Get user input
         vendingMachineService.depositMoney(amount); // Deposit money
