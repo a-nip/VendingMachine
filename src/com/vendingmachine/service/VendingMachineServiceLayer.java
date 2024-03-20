@@ -16,12 +16,14 @@ public interface VendingMachineServiceLayer {
     List<Item> getItems() throws
             VendingMachinePersistenceException;
 
-    Item getItem(String studentId) throws
+    Item getItem(String item) throws
             VendingMachinePersistenceException;
 
-    Item removeItem(String studentId) throws
+    Item removeItem(String item) throws
             VendingMachinePersistenceException;
 
     void depositMoney(BigDecimal b) throws VendingMachineDataValidationException;
 
+    String purchaseItem(String itemName) throws
+            InsufficientFundsException, NoItemInventoryException;
 }
