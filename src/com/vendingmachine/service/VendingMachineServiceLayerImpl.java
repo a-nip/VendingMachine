@@ -5,7 +5,6 @@ import com.vendingmachine.dto.Item;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Map;
 
 public class VendingMachineServiceLayerImpl implements VendingMachineServiceLayer {
 
