@@ -10,8 +10,8 @@ import java.math.RoundingMode;
 import java.util.*;
 
 public class VendingMachineDaoImpl implements VendingMachineDao{
-    private Change wallet;
-    private final List<Item> stock = new ArrayList<>();
+    public Change wallet;
+    public final List<Item> stock = new ArrayList<>();
     public static final String STOCK_FILE = "stock.txt";
     public static final String DELIMITER = "::";
     @Override

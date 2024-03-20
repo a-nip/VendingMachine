@@ -3,6 +3,7 @@ package com.vendingmachine.service;
 import com.vendingmachine.dao.VendingMachinePersistenceException;
 import com.vendingmachine.dto.Item;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public interface VendingMachineServiceLayer {
@@ -15,10 +16,12 @@ public interface VendingMachineServiceLayer {
     List<Item> getItems() throws
             VendingMachinePersistenceException;
 
-    Item getStudent(String studentId) throws
+    Item getItem(String studentId) throws
             VendingMachinePersistenceException;
 
-    Item removeStudent(String studentId) throws
+    Item removeItem(String studentId) throws
             VendingMachinePersistenceException;
+
+    void depositMoney(BigDecimal b) throws VendingMachineDataValidationException;
 
 }

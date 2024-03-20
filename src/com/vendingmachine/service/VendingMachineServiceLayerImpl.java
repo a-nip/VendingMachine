@@ -1,5 +1,6 @@
 package com.vendingmachine.service;
 
+import com.vendingmachine.dao.VendingMachineDao;
 import com.vendingmachine.dto.Item;
 
 import java.math.BigDecimal;
@@ -9,12 +10,12 @@ import java.util.Map;
 public class VendingMachineServiceLayerImpl implements VendingMachineServiceLayer {
 
     //TODO - private dao,
-    private List<Item> items;
-    private BigDecimal depositedAmount;
+    VendingMachineDao dao;
 
     // Constructor to initialize the service
     //TODO (DAO) this.dao = dao
-    public VendingMachineServiceLayerImpl() {
+    public VendingMachineServiceLayerImpl(VendingMachineDao dao) {
+        this.dao = dao;
 //        this.items = new HashMap<>(); // Initialize the items map
 //        this.depositedAmount = BigDecimal.ZERO; // Initialize the deposited amount to zero//to be rid
     }
@@ -27,18 +28,18 @@ public class VendingMachineServiceLayerImpl implements VendingMachineServiceLaye
 
     // Method to add an item to the items map
     public void addItem(Item item) {
-        items.put(item.getName(), item);
+        items.add(item.getName(), item);
     }
 
     // Method to deposit money
     //TODO check for valid input
     public void depositMoney(BigDecimal amount) {
-        depositedAmount = depositedAmount.add(amount);
+        dao.addMoney(amount);
     }
 
     // Method to purchase an item
     public String purchaseItem(String itemName) throws InsufficientFundsException, NoItemInventoryException {
-        Item selectedItem = items.get(itemName); // Get the selected item
+        Item selectedItem = dao.getItem(itemName); // Get the selected item
         if (selectedItem == null) {
             // If the selected item is not found in the inventory, throw an exception
             throw new NoItemInventoryException("Item not found in inventory: " + itemName);
@@ -53,6 +54,7 @@ public class VendingMachineServiceLayerImpl implements VendingMachineServiceLaye
         depositedAmount = BigDecimal.ZERO; // Reset deposited amount
         return "Change returned: $" + changeAmount;
     }
+    //TODO- validate big decimal
 
     // Method to display items
 //    public void displayItems() {
