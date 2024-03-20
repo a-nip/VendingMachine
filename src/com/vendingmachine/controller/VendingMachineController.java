@@ -7,15 +7,19 @@ import com.service.InsufficientFundsException;
 import com.service.NoItemInventoryException;
 
 import com.vendingmachine.dto.Item;
+import com.vendingmachine.service.VendingMachineServiceLayer;
 import com.vendingmachine.service.VendingMachineServiceLayerImpl;
+import com.vendingmachine.ui.VendingMachineView;
 
 
 public class VendingMachineController {
-    private final VendingMachineServiceLayerImpl vendingMachineService;
+    private final VendingMachineServiceLayer vendingMachineService;
+    private final VendingMachineView vendingMachineView;
     private final Scanner scanner;
 
-    public VendingMachineController(VendingMachineServiceLayerImpl vendingMachineService) {
-        this.vendingMachineService = vendingMachineService;
+    public VendingMachineController(VendingMachineServiceLayer service, VendingMachineView view) {
+        this.vendingMachineService = service;
+        this.vendingMachineView = view;
         this.scanner = new Scanner(System.in);
     }
 

@@ -1,10 +1,10 @@
 package com.vendingmachine.service;
 
+import com.vendingmachine.dao.VendingMachineDao;
 import com.vendingmachine.dto.Item;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Map;
 
 public class VendingMachineServiceLayerImpl implements VendingMachineServiceLayer {
 
@@ -14,7 +14,7 @@ public class VendingMachineServiceLayerImpl implements VendingMachineServiceLaye
 
     // Constructor to initialize the service
     //TODO (DAO) this.dao = dao
-    public VendingMachineServiceLayerImpl() {
+    public VendingMachineServiceLayerImpl(VendingMachineDao dao) {
 //        this.items = new HashMap<>(); // Initialize the items map
 //        this.depositedAmount = BigDecimal.ZERO; // Initialize the deposited amount to zero//to be rid
     }
