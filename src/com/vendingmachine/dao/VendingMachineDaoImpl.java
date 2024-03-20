@@ -12,7 +12,7 @@ import java.util.*;
 public class VendingMachineDaoImpl implements VendingMachineDao{
     private Change wallet;
     private final List<Item> stock = new ArrayList<>();
-    public static final String STOCK_FILE = "addressList.txt";
+    public static final String STOCK_FILE = "stock.txt";
     public static final String DELIMITER = "::";
     @Override
     public BigDecimal addMoney(BigDecimal moneyToAdd) {
@@ -46,6 +46,7 @@ public class VendingMachineDaoImpl implements VendingMachineDao{
     @Override
     public Item getItem(String name) {
         for(Item i : stock) {
+            i.setQuantity(i.getQuantity() - 1);
             if (i.getName().equals(name)) return i;
         }
         //Return null on failure to find item.
