@@ -1,105 +1,73 @@
 package com.vendingmachine.ui;
 
+
+
 import com.vendingmachine.dto.Item;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Scanner;
+
+// VendingMachineView.java
+
+import com.vendingmachine.dto.Item;
+
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.Scanner;
 
 public class VendingMachineView {
-    private final UserIO io;
-    public VendingMachineView(UserIO io){
-        this.io = io;
-    }
-    public int printMenuAndGetSelection() {
-        io.print("Main Menu");
-        io.print("1. List Students");
-        io.print("2. Create New Student");
-        io.print("3. View a Student");
-        io.print("4. Remove a Student");
-        io.print("5. Exit");
+    private Scanner scanner;
 
-        return io.readInt("Please select from the above choices.", 1, 5);
+    public VendingMachineView(UserIO io) {
+        scanner = new Scanner(System.in);
     }
 
-    public void displayCreateStudentBanner() {
-        io.print("=== Create Item ===");
+    public int displayMenuAndGetSelection() {
+        System.out.println("Vending Machine Menu:");
+        System.out.println("1. Display Items");
+        System.out.println("2. Add Money");
+        System.out.println("3. Purchase Item");
+        System.out.println("4. Add Item");
+        System.out.println("5. Exit");
+        System.out.print("Please select an option: ");
+        return scanner.nextInt();
     }
 
-    public void displayCreateSuccessBanner() {
-        io.readString(
-                "Item successfully created.  Please hit enter to continue");
-    }
-
-    public void displayStudentList(List<Item> studentList) {
-//        for (Map.Entry<Integer, Item> entry : studentList.entrySet()) {
-//            System.out.println(entry.getKey() + ":" + entry.getValue());
-//        }
-        for (Item currentStudent : studentList) {
-            String studentInfo = String.format("#%s : %s",
-                    currentStudent.getName(),
-                    currentStudent.getPrice());
-            io.print(studentInfo);
+    public void displayItems(List<Item> itemList) {
+        System.out.println("Available Items:");
+        for (Item item : itemList) {
+            System.out.println(item.getName() + " - $" + item.getPrice());
         }
-        walletAmnt();
-        io.readString("Please hit enter to continue.");
     }
 
-    public void walletAmnt(){
-        io.readString("Please Enter an amount.");
-
-    }
-    public void displayDisplayAllBanner() {
-        io.print("=== Display All Items ===");
+    public BigDecimal promptMoneyInput() {
+        System.out.print("Enter amount to add: $");
+        return scanner.nextBigDecimal();
     }
 
-    public void displayDisplayStudentBanner () {
-        io.print("=== Display Item ===");
+    public String promptItemSelection() {
+        System.out.print("Enter the name of the item you want to purchase: ");
+        return scanner.next();
     }
 
-    public String getStudentIdChoice() {
-        return io.readString("Please enter the Item ID.");
+    public void displayMessage(String message) {
+        System.out.println(message);
     }
 
-    public Item getNewStudentInfo() {
-        String name = io.readString("Please enter Student ID");
-        String price = io.readString("Please enter First Name");
-        Item currentStudent = new Item(name); //Also needs price; see Item class
-        currentStudent.setPrice(BigDecimal.valueOf(Double.parseDouble(price)));
-        return currentStudent;
-    }
-    public void displayStudent(Item student) {
-        if (student != null) {
-            io.print(student.getName());
-            io.print(String.valueOf(student.getPrice()));
-            io.print("");
-        } else {
-            io.print("No such student.");
-        }
-        io.readString("Please hit enter to continue.");
+    public void displayError(String errorMessage) {
+        System.err.println("Error: " + errorMessage);
     }
 
-    public void displayRemoveStudentBanner () {
-        io.print("=== Remove Item ===");
+    // Method to prompt the user for the name of the item
+    public String promptItemName() {
+        System.out.print("Enter the name of the item: ");
+        return scanner.next();
     }
 
-    public void displayRemoveResult(Item studentRecord) {
-        if(studentRecord != null){
-            io.print("Item successfully removed.");
-        }else{
-            io.print("No such student.");
-        }
-        io.readString("Please hit enter to continue.");
-    }
-    public void displayExitBanner() {
-        io.print("Good Bye!!!");
-    }
-
-    public void displayUnknownCommandBanner() {
-        io.print("Unknown Command!!!");
-    }
-
-    public void displayErrorMessage(String errorMsg) {
-        io.print("=== ERROR ===");
-        io.print(errorMsg);
+    // Method to prompt the user for the price of the item
+    public BigDecimal promptItemPrice() {
+        System.out.print("Enter the price of the item: $");
+        return scanner.nextBigDecimal();
     }
 }

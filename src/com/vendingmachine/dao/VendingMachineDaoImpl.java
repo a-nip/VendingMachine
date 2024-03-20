@@ -21,6 +21,25 @@ public class VendingMachineDaoImpl implements VendingMachineDao{
                         .add(moneyToAdd));
         return wallet.getAmount();
     }
+    @Override
+    public BigDecimal getDepositedAmount() {
+        // Implement logic to retrieve the deposited amount
+        // For example, if you have a field representing the deposited amount in your VendingMachineDaoImpl class:
+        // return depositedAmount;
+
+        // If you calculate the deposited amount based on the wallet or other factors, provide appropriate logic here
+
+        // For demonstration purposes, let's return a constant value
+        return BigDecimal.ZERO;
+    }
+
+    @Override
+    public void addItem(Item item) {
+        // Implement logic to add item to the inventory
+        // For example, you can add the item to the list of items in the inventory
+        // Let's assume 'stock' is the list of items in your vending machine inventory
+        stock.add(item);
+    }
 
     @Override
     public Map<Coins, BigDecimal> getChange(Item item) {
@@ -52,6 +71,15 @@ public class VendingMachineDaoImpl implements VendingMachineDao{
         //Return null on failure to find item.
         return null;
     }
+    @Override
+    public void setStock(List<Item> itemList) {
+        // Implement logic to set the stock of items in the vending machine
+        // For example, you can update the 'stock' list with the provided list of items
+        // Assuming 'stock' is a member variable representing the inventory in your VendingMachineDaoImpl class
+        this.stock.clear(); // Clear existing stock
+        this.stock.addAll(itemList); // Set the stock to the provided list of items
+    }
+
 
     @Override
     public List<Item> getAllItems() {
