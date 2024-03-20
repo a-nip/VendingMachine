@@ -6,6 +6,7 @@ import java.util.Scanner;
 import com.service.InsufficientFundsException;
 import com.service.NoItemInventoryException;
 
+import com.vendingmachine.dao.VendingMachinePersistenceException;
 import com.vendingmachine.dto.Item;
 import com.vendingmachine.service.VendingMachineServiceLayer;
 import com.vendingmachine.service.VendingMachineServiceLayerImpl;
@@ -51,11 +52,11 @@ public class VendingMachineController {
     }
 
     // Prompt user to select an item
-    private void selectItem() {
+    private void selectItem() throws VendingMachinePersistenceException {
         System.out.print("Enter the name of the item you want to purchase: ");
         String itemName = scanner.next(); // Get user input
         try {
-            Item selectedItem = vendingMachineService.getItems().get(itemName); // Get selected item
+            Item selectedItem = vendingMachineService.getItems().get(Integer.parseInt(itemName)); // Get selected item
             if (selectedItem == null) {
                 // If item is not available
                 System.out.println("Sorry, the item '" + itemName + "' is not available.");
