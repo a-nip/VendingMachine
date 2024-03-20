@@ -5,7 +5,7 @@ import java.math.BigDecimal;
 public class Item {
     private String name;
     private BigDecimal price;
-    private int quantity; //TODO: change code to use quantity variable here instead of map quantity integer
+    private int quantity;
 
     //Must be instantiated with a name and price.
     public Item(String n, BigDecimal p) {
