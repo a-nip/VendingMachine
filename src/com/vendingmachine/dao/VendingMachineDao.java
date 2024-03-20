@@ -31,10 +31,4 @@ public interface VendingMachineDao {
 
     //Reads stock from file.
     void readStock() throws VendingMachinePersistenceException;
-
-    BigDecimal getDepositedAmount();
-
-    void setStock(List<Item> itemList);
-
-    void addItem(Item item);
 }
