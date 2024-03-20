@@ -4,12 +4,19 @@ import java.math.BigDecimal;
 import java.util.Map;
 import java.util.Scanner;
 import com.service.InsufficientFundsException;
+import com.service.NoItemInventoryException;
+
+import com.vendingmachine.dto.Item;
+import com.vendingmachine.enums.Coins;
+import com.vendingmachine.service.VendingMachineServiceLayer;
+import com.vendingmachine.ui.UserIO;
+
 
 public class VendingMachineController {
-    private final VendingMachineService vendingMachineService;
+    private final VendingMachineServiceLayer vendingMachineService;
     private final Scanner scanner;
 
-    public VendingMachineController(VendingMachineService vendingMachineService) {
+    public VendingMachineController(VendingMachineServiceLayer vendingMachineService) {
         this.vendingMachineService = vendingMachineService;
         this.scanner = new Scanner(System.in);
     }
@@ -26,9 +33,9 @@ public class VendingMachineController {
         System.out.println("Available Items:");
         // Iterate through the items map
         for (Map.Entry<String, Item> entry : vendingMachineService.getItems().entrySet()) {
-            String itemName = entry.getKey();    // Get item name
-            Item item = entry.getValue();        // Get item object
-            BigDecimal itemCost = item.getCost(); // Get item cost
+            String itemName = entry.getKey(); // Get item name
+            Item item = entry.getValue(); // Get item object
+            BigDecimal itemCost = item.getPrice(); // Get item cost
             // Display item name and cost
             System.out.println(itemName + " - $" + itemCost);
         }
@@ -40,6 +47,7 @@ public class VendingMachineController {
         BigDecimal amount = scanner.nextBigDecimal(); // Get user input
         vendingMachineService.depositMoney(amount); // Deposit money
     }
+
     // Prompt user to select an item
     private void selectItem() {
         System.out.print("Enter the name of the item you want to purchase: ");
@@ -51,8 +59,9 @@ public class VendingMachineController {
                 System.out.println("Sorry, the item '" + itemName + "' is not available.");
                 return;
             }
-            BigDecimal itemCost = selectedItem.getCost(); // Get item cost
+            BigDecimal itemCost = selectedItem.getPrice(); // Get item cost
             System.out.println("Item selected: " + selectedItem.getName() + " - Cost: $" + itemCost);
+
             // Proceed with the purchase logic...
         } catch (InsufficientFundsException e) {
             // If user has insufficient funds
