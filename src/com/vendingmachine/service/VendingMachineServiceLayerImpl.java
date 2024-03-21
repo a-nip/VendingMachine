@@ -8,7 +8,7 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
-public class VendingMachineServiceImpl  implements VendingServiceLayer{
+public class VendingMachineServiceImpl  implements VendingMachineServiceLayer{
     VendingMachineDao dao;
 
     // Constructor to initialize the service
@@ -86,21 +86,16 @@ public class VendingMachineServiceImpl  implements VendingServiceLayer{
     // Method to display items
     public void displayItems() {
         System.out.println("Available Items:");
-        // Iterate through the items map and print each item with its cost
-        for (Map.Entry<String, Item> entry : items.entrySet()) {
-            String itemName = entry.getKey();                 // Get the item name
-            Item item = entry.getValue();                      // Get the item object
-            BigDecimal itemCost = item.getPrice();             // Get the cost of the item
-            System.out.println(itemName + " - $" + itemCost); // Print item name and cost
-        }
+        if(dao.get)
+        dao.getAllItems();
     }
     private void validateStudentData(Item item) throws
             VendingMachineDataValidationException {
 
         if (item.getName() == null
-                || item.getName().trim().length() == 0
+                || item.getName().trim().isEmpty()
                 || item.getPrice() == null
-                || item.getPrice().equals(0)) {
+                || item.getPrice().equals(BigDecimal.valueOf(0))) {
 
             throw new VendingMachineDataValidationException(
                     "ERROR: All fields [First Name, Last Name, Cohort] are required.");

@@ -3,9 +3,8 @@ package com.vendingmachine.controller;
 import java.math.BigDecimal;
 import java.util.Map;
 import java.util.Scanner;
-import com.service.InsufficientFundsException;
-import com.service.NoItemInventoryException;
-
+import com.vendingmachine.service.InsufficientFundsException;
+import com.vendingmachine.service.NoItemInventoryException;
 import com.vendingmachine.dao.VendingMachinePersistenceException;
 import com.vendingmachine.dto.Item;
 import com.vendingmachine.service.VendingMachineDataValidationException;
@@ -25,14 +24,14 @@ public class VendingMachineController {
     }
 
     // Start the vending machine
-    public void start() throws VendingMachinePersistenceException {
+    public void start() throws VendingMachineDataValidationException, VendingMachinePersistenceException {
         displayItems(); // Display available items
         depositMoney(); // Prompt user to deposit money
         selectItem(); // Prompt user to select an item
     }
 
     // Display available items
-    private void displayItems() {
+    private void displayItems() throws VendingMachinePersistenceException {
         System.out.println("Available Items:");
         // Iterate through the items map
         for (Map.Entry<String, Item> entry : vendingMachineService.getItems().entrySet()) {

@@ -11,6 +11,9 @@ public interface VendingMachineDao {
     //Takes money input and adds to wallet.
     BigDecimal addMoney(BigDecimal moneyToAdd);
 
+    //Returns wallet amount.
+    BigDecimal getMoney();
+
     //Gets item value and calculates change from interval between item value and wallet funds.
     Map<Coins, BigDecimal> getChange(Item item);
 
