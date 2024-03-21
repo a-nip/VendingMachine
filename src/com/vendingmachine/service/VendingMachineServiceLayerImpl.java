@@ -1,51 +1,66 @@
 package com.vendingmachine.service;
 
 import com.vendingmachine.dao.VendingMachineDao;
+import com.vendingmachine.dao.VendingMachinePersistenceException;
 import com.vendingmachine.dto.Item;
-
+import com.vendingmachine.enums.Coins;
+import java.math.BigDecimal;
+import java.util.List;
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.Map;
 import java.math.BigDecimal;
 import java.util.List;
 
 public class VendingMachineServiceLayerImpl implements VendingMachineServiceLayer {
-
-    VendingMachineDao dao;
-
-    public VendingMachineServiceLayerImpl(VendingMachineDao dao) {
-        this.dao = dao;
+    private VendingMachineDao vendingMachineDao;
+    public VendingMachineServiceLayerImpl(VendingMachineDao vendingMachineDao) {
+        this.vendingMachineDao = vendingMachineDao;
     }
-
-    // Method to get the items map
-    public List<Item> getItems() {
-        return items;
+    @Override
+    public void addItem(Item item) throws VendingMachineDuplicateIdException, VendingMachineDataValidationException, VendingMachinePersistenceException {
+        // Delegate to the DAO layer method
+        vendingMachineDao.addItem(item.getName(), item.getPrice(), item.getQuantity());
     }
-
-    // Method to add an item to the items map
-    public void addItem(Item item) {
-        items.add(item.getName(), item);
+    @Override
+    public List<Item> getItems() throws VendingMachinePersistenceException {
+        return vendingMachineDao.getAllItems();
     }
-
-    // Method to deposit money
-    public void depositMoney(BigDecimal amount) {
-        dao.addMoney(amount);
+    @Override
+    public Item getItem(String itemName) throws VendingMachinePersistenceException {
+        return vendingMachineDao.getItem(itemName);
     }
-
-    // Method to purchase an item
+    @Override
+    public Item removeItem(String itemName) throws VendingMachinePersistenceException {
+        return vendingMachineDao.removeItem(itemName);
+    }
+    @Override
+    public void depositMoney(BigDecimal amount) throws VendingMachineDataValidationException {
+        vendingMachineDao.addMoney(amount);
+    }
+    @Override
     public String purchaseItem(String itemName) throws InsufficientFundsException, NoItemInventoryException {
-        Item selectedItem = dao.getItem(itemName); // Get the selected item
-        if (selectedItem == null) {
-            // If the selected item is not found in the inventory, throw an exception
-            throw new NoItemInventoryException("Item not found in inventory: " + itemName);
+        try {
+            // First, get the item from DAO
+            Item item = vendingMachineDao.getItem(itemName);
+            if (item == null) {
+                throw new NoItemInventoryException("Item not found in inventory");
+            }
+            BigDecimal itemPrice = item.getPrice();
+            BigDecimal currentMoney = vendingMachineDao.getMoney();
+            if (currentMoney.compareTo(itemPrice) < 0) {
+                throw new InsufficientFundsException("Not enough money to purchase item");
+            }
+            // Calculate change
+            Map<Coins, BigDecimal> change = vendingMachineDao.getChange(item);
+            // Perform purchase
+            vendingMachineDao.removeItem(itemName);
+            // Return a message indicating successful purchase
+            return "Item purchased successfully: " + itemName + ". Change: " + change.toString();
+        } catch (VendingMachinePersistenceException e) {
+            // Rethrow the exception
+            throw new NoItemInventoryException("Error purchasing item", e);
         }
-        BigDecimal itemCost = selectedItem.getPrice(); // Get the cost of the selected item
-        if (depositedAmount.compareTo(itemCost) < 0) {
-            // If the deposited amount is less than the item cost, throw an exception
-            throw new InsufficientFundsException("Insufficient funds to purchase item: " + itemName);
-        }
-        // Calculate change
-        BigDecimal changeAmount = depositedAmount.subtract(itemCost);
-        depositedAmount = BigDecimal.ZERO; // Reset deposited amount
-        return "Change returned: $" + changeAmount;
     }
-    //TODO- validate big decimal
-    
+
 }

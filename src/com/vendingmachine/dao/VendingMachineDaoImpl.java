@@ -9,7 +9,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.*;
 
-public class VendingMachineDaoImpl implements VendingMachineDao{
+public class VendingMachineDaoImpl implements VendingMachineDao {
     public Change wallet;
     public final List<Item> stock = new ArrayList<>();
     public static final String STOCK_FILE = "stock.txt";
@@ -19,6 +19,11 @@ public class VendingMachineDaoImpl implements VendingMachineDao{
         wallet.setAmount(
                 wallet.getAmount()
                         .add(moneyToAdd));
+        return wallet.getAmount();
+    }
+
+    @Override
+    public BigDecimal getMoney() {
         return wallet.getAmount();
     }
 
@@ -54,8 +59,33 @@ public class VendingMachineDaoImpl implements VendingMachineDao{
     }
 
     @Override
-    public List<Item> getAllItems() {
+    public List<Item> getAllItems() throws VendingMachinePersistenceException {
+        readStock();
         return stock;
+    }
+
+    @Override
+    public Item addItem(String name, BigDecimal price, int quantity) {
+        Item addedItem = new Item(name, price, quantity);
+        stock.add(addedItem);
+
+        return addedItem;
+    }
+
+    @Override
+    public Item removeItem(String name) throws VendingMachinePersistenceException {
+        readStock();
+        Item removedItem = null;
+
+        for (Item item : stock) {
+            if (item.getName() == name) {
+                removedItem = item;
+                stock.remove(item);
+                break;
+            }
+        }
+
+        return removedItem;
     }
 
     @Override
