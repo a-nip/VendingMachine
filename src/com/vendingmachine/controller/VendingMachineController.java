@@ -1,11 +1,10 @@
 package com.vendingmachine.controller;
 
 import java.math.BigDecimal;
-import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
-import com.vendingmachine.service.InsufficientFundsException;
-import com.vendingmachine.service.NoItemInventoryException;
+import com.service.InsufficientFundsException;
+import com.service.NoItemInventoryException;
 
 import com.vendingmachine.dao.VendingMachinePersistenceException;
 import com.vendingmachine.dto.Item;
@@ -15,82 +14,64 @@ import com.vendingmachine.ui.VendingMachineView;
 
 
 public class VendingMachineController {
-    private VendingMachineServiceLayer serviceLayer;
-    private VendingMachineView view;
+    private final VendingMachineServiceLayer vendingMachineService;
+    private final VendingMachineView vendingMachineView;
+    private final Scanner scanner;
 
-    public VendingMachineController(VendingMachineServiceLayer serviceLayer, VendingMachineView view) {
-        this.serviceLayer = serviceLayer;
-        this.view = view;
+    public VendingMachineController(VendingMachineServiceLayer service, VendingMachineView view) {
+        this.vendingMachineService = service;
+        this.vendingMachineView = view;
+        this.scanner = new Scanner(System.in);
     }
 
-    public void run() {
-        boolean keepRunning = true;
-        while (keepRunning) {
-            int choice = view.displayMenuAndGetSelection();
-            switch (choice) {
-                case 1:
-                    displayItems();
-                    break;
-                case 2:
-                    addMoney();
-                    break;
-                case 3:
-                    purchaseItem();
-                    break;
-                case 4:
-                    addItem();
-                    break;
-                case 5:
-                    keepRunning = false;
-                    break;
-                default:
-                    view.displayError("Invalid choice. Please try again.");
-            }
-        }
+    // Start the vending machine
+    public void start() throws VendingMachinePersistenceException {
+        displayItems(); // Display available items
+        depositMoney(); // Prompt user to deposit money
+        selectItem(); // Prompt user to select an item
     }
 
+    // Display available items
     private void displayItems() {
-        try {
-            List<Item> items = serviceLayer.getItems();
-            view.displayItems(items);
-        } catch (Exception e) {
-            view.displayError("Error occurred while fetching items: " + e.getMessage());
+        System.out.println("Available Items:");
+        // Iterate through the items map
+        for (Map.Entry<String, Item> entry : vendingMachineService.getItems().entrySet()) {
+            String itemName = entry.getKey(); // Get item name
+            Item item = entry.getValue(); // Get item object
+            BigDecimal itemCost = item.getPrice(); // Get item cost
+            // Display item name and cost
+            System.out.println(itemName + " - $" + itemCost);
         }
     }
 
-    private void addMoney() {
-        BigDecimal amount = view.promptMoneyInput();
-        try {
-            serviceLayer.depositMoney(amount);
-            view.displayMessage("Money added successfully.");
-        } catch (Exception e) {
-            view.displayError("Error occurred while adding money: " + e.getMessage());
-        }
+    // Prompt user to deposit money
+    private void depositMoney() throws VendingMachineDataValidationException {
+        System.out.print("Please deposit money (in dollars): ");
+        BigDecimal amount = scanner.nextBigDecimal(); // Get user input
+        vendingMachineService.depositMoney(amount); // Deposit money
     }
 
-    private void purchaseItem() {
-        String itemName = view.promptItemSelection();
+    // Prompt user to select an item
+    private void selectItem() throws VendingMachinePersistenceException {
+        System.out.print("Enter the name of the item you want to purchase: ");
+        String itemName = scanner.next(); // Get user input
         try {
-            Item item = serviceLayer.removeItem(itemName);
-            if (item != null) {
-                view.displayMessage("Item purchased successfully: " + item.getName());
-            } else {
-                view.displayMessage("Item not found: " + itemName);
+            Item selectedItem = vendingMachineService.getItems().get(Integer.parseInt(itemName)); // Get selected item
+            if (selectedItem == null) {
+                // If item is not available
+                System.out.println("Sorry, the item '" + itemName + "' is not available.");
+                return;
             }
-        } catch (Exception e) {
-            view.displayError("Error occurred while purchasing item: " + e.getMessage());
-        }
-    }
+            BigDecimal itemCost = selectedItem.getPrice(); // Get item cost
+            System.out.println("Item selected: " + selectedItem.getName() + " - Cost: $" + itemCost);
 
-    private void addItem() {
-        String name = view.promptItemName();
-        BigDecimal price = view.promptItemPrice();
-        try {
-            Item newItem = new Item(name, price);
-            serviceLayer.addItem(newItem);
-            view.displayMessage("Item added successfully: " + newItem.getName());
-        } catch (Exception e) {
-            view.displayError("Error occurred while adding item: " + e.getMessage());
+            // Proceed with the purchase logic...
+        } catch (InsufficientFundsException e) {
+            // If user has insufficient funds
+            System.out.println("Insufficient funds. Please deposit more money.");
+        } catch (NoItemInventoryException e) {
+            // If selected item is out of stock
+            System.out.println("Sorry, this item is out of stock.");
         }
     }
 }
