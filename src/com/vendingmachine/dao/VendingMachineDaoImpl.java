@@ -14,8 +14,6 @@ public class VendingMachineDaoImpl implements VendingMachineDao{
     public final List<Item> stock = new ArrayList<>();
     public static final String STOCK_FILE = "stock.txt";
     public static final String DELIMITER = "::";
-    private Item item;
-
     @Override
     public BigDecimal addMoney(BigDecimal moneyToAdd) {
         wallet.setAmount(
@@ -24,18 +22,6 @@ public class VendingMachineDaoImpl implements VendingMachineDao{
         return wallet.getAmount();
     }
 
-    @Override
-    public void addItem(Item item) {
-        this.item = item;
-        stock.add(item);
-    }
-
-
-    @Override
-    public void setStock(List<Item> itemList) {
-        this.stock.clear(); // Clear existing stock
-        this.stock.addAll(itemList); // Set the stock to the provided list of items
-    }
     @Override
     public Map<Coins, BigDecimal> getChange(Item item) {
         Map<Coins, BigDecimal> change = new HashMap<>();
@@ -57,6 +43,15 @@ public class VendingMachineDaoImpl implements VendingMachineDao{
         return change;
     }
 
+    @Override
+    public Item getItem(String name) {
+        for(Item i : stock) {
+            i.setQuantity(i.getQuantity() - 1);
+            if (i.getName().equals(name)) return i;
+        }
+        //Return null on failure to find item.
+        return null;
+    }
 
     @Override
     public List<Item> getAllItems() {
@@ -106,26 +101,6 @@ public class VendingMachineDaoImpl implements VendingMachineDao{
         }
         // Clean up
         out.close();
-    }
-
-    @Override
-    public BigDecimal getDepositedAmount() {
-        return wallet.getAmount();
-    }
-
-
-    @Override
-    public Item getItem(String name) throws VendingMachinePersistenceException {
-        // Search for the item in the stock by its name
-
-        for (Item item : stock) {
-            if (item.getName().equals(name)) {
-                // If found, return the item
-                return item;
-            }
-        }
-        // If the item is not found, throw an exception
-        throw new VendingMachinePersistenceException("Item not found with name: " + name);
     }
 
     @Override

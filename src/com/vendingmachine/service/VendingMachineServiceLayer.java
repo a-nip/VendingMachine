@@ -19,10 +19,6 @@ public interface VendingMachineServiceLayer {
     Item getItem(String studentId) throws
             VendingMachinePersistenceException;
 
-    BigDecimal getDepositedAmount();
-
-    void setStock(List<Item> itemList);
-
     Item removeItem(String studentId) throws
             VendingMachinePersistenceException;
 
