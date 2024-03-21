@@ -8,19 +8,13 @@ import java.util.List;
 
 public class VendingMachineServiceLayerImpl implements VendingMachineServiceLayer {
 
-    //TODO - private dao,
     VendingMachineDao dao;
 
-    // Constructor to initialize the service
-    //TODO (DAO) this.dao = dao
     public VendingMachineServiceLayerImpl(VendingMachineDao dao) {
         this.dao = dao;
-//        this.items = new HashMap<>(); // Initialize the items map
-//        this.depositedAmount = BigDecimal.ZERO; // Initialize the deposited amount to zero//to be rid
     }
 
     // Method to get the items map
-    //TODO-ADD checks for different inputs
     public List<Item> getItems() {
         return items;
     }
@@ -31,7 +25,6 @@ public class VendingMachineServiceLayerImpl implements VendingMachineServiceLaye
     }
 
     // Method to deposit money
-    //TODO check for valid input
     public void depositMoney(BigDecimal amount) {
         dao.addMoney(amount);
     }
@@ -54,16 +47,5 @@ public class VendingMachineServiceLayerImpl implements VendingMachineServiceLaye
         return "Change returned: $" + changeAmount;
     }
     //TODO- validate big decimal
-
-    // Method to display items
-//    public void displayItems() {
-//        System.out.println("Available Items:");
-//        // Iterate through the items map and print each item with its cost
-//        for (Map.Entry<String, Item> entry : items.entrySet()) {
-//            String itemName = entry.getKey();                 // Get the item name
-//            Item item = entry.getValue();                      // Get the item object
-//            BigDecimal itemCost = item.getPrice();             // Get the cost of the item
-//            System.out.println(itemName + " - $" + itemCost); // Print item name and cost
-//        }
-//    }
+    
 }

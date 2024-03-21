@@ -24,4 +24,5 @@ public interface VendingMachineServiceLayer {
 
     void depositMoney(BigDecimal b) throws VendingMachineDataValidationException;
 
+    String purchaseItem(String itemName) throws InsufficientFundsException, NoItemInventoryException;
 }
