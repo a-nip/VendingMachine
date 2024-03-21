@@ -1,5 +1,6 @@
 package com.vendingmachine.ui;
 
+import java.math.BigDecimal;
 import java.util.Scanner;
 
 public class UserIOConsoleImpl implements UserIO{
@@ -14,6 +15,26 @@ public class UserIOConsoleImpl implements UserIO{
     public String readString(String prompt) {
         System.out.println(prompt);
         return s.nextLine();
+    }
+
+    @Override
+    public BigDecimal readBigDecimal(String prompt) {
+        System.out.println(prompt);
+        return BigDecimal.valueOf(
+                Double.parseDouble(s.nextLine().trim()));
+    }
+
+    @Override
+    public BigDecimal readBigDecimal(String prompt, BigDecimal min, BigDecimal max) {
+        while(true){
+            System.out.println(prompt);
+            try{
+                BigDecimal input = BigDecimal.valueOf(
+                        Double.parseDouble(s.nextLine().trim()));
+                if(input.compareTo(min) > 0 && input.compareTo(max) < 0) return input;
+            }catch(Exception ignored){}
+            System.out.println("Invalid input! Please try again.");
+        }
     }
 
     @Override
