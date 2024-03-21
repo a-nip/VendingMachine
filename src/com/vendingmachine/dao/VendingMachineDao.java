@@ -24,7 +24,7 @@ public interface VendingMachineDao {
     List<Item> getAllItems() throws VendingMachinePersistenceException;
 
     //Adds a new item to stock.
-    Item addItem(String name, BigDecimal price, int quantity);
+    Item addItem(String name, BigDecimal price, int quantity) throws VendingMachinePersistenceException;
 
     //Removes an item from stock.
     Item removeItem(String name) throws VendingMachinePersistenceException;

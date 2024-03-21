@@ -69,9 +69,9 @@ public class VendingMachineController {
     }
 
     private void purchaseItem() {
-        String itemName = view.promptItemSelection();
+        String itemName = view.promptItemName();
         try {
-            Item item = serviceLayer.removeItem(itemName);
+            Item item = serviceLayer.getItem(itemName);
             if (item != null) {
                 view.displayMessage("Item purchased successfully: " + item.getName());
             } else {

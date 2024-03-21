@@ -6,11 +6,11 @@ import com.vendingmachine.enums.Coins;
 
 import java.io.*;
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.*;
+import java.math.RoundingMode;
 
 public class VendingMachineDaoImpl implements VendingMachineDao {
-    public Change wallet;
+    public Change wallet = new Change();
     public final List<Item> stock = new ArrayList<>();
     public static final String STOCK_FILE = "stock.txt";
     public static final String DELIMITER = "::";
@@ -49,12 +49,17 @@ public class VendingMachineDaoImpl implements VendingMachineDao {
     }
 
     @Override
-    public Item getItem(String name) {
+    public Item getItem(String name) throws VendingMachinePersistenceException {
         for(Item i : stock) {
-            i.setQuantity(i.getQuantity() - 1);
-            if (i.getName().equals(name)) return i;
+            if (i.getName().equals(name)){
+                i.setQuantity(i.getQuantity() - 1);
+                writeStock();
+                return i;
+
+            }
         }
         //Return null on failure to find item.
+        System.out.println("TExt");
         return null;
     }
 
@@ -65,10 +70,10 @@ public class VendingMachineDaoImpl implements VendingMachineDao {
     }
 
     @Override
-    public Item addItem(String name, BigDecimal price, int quantity) {
+    public Item addItem(String name, BigDecimal price, int quantity) throws VendingMachinePersistenceException {
         Item addedItem = new Item(name, price, quantity);
         stock.add(addedItem);
-
+        writeStock();
         return addedItem;
     }
 
@@ -81,6 +86,7 @@ public class VendingMachineDaoImpl implements VendingMachineDao {
             if (item.getName() == name) {
                 removedItem = item;
                 stock.remove(item);
+                writeStock();
                 break;
             }
         }
@@ -120,7 +126,7 @@ public class VendingMachineDaoImpl implements VendingMachineDao {
         }
 
         String itemAsText;
-        List<Item> stock = this.getAllItems();
+//        List<Item> stock = this.getAllItems();
         for (Item item : stock) {
             // turn item into a String
             itemAsText = marshallItem(item);
