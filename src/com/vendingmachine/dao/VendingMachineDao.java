@@ -15,7 +15,7 @@ public interface VendingMachineDao {
     Map<Coins, BigDecimal> getChange(Item item);
 
     //Selects item by name, decrementing stock quantity and wallet funds.
-    Item getItem(String name);
+    Item getItem(String name) throws VendingMachinePersistenceException;
 
     //Returns all items currently saved in memory.
     List<Item> getAllItems();
@@ -29,6 +29,12 @@ public interface VendingMachineDao {
     //Writes stock to file.
     void writeStock() throws VendingMachinePersistenceException;
 
+    BigDecimal getDepositedAmount();
+
     //Reads stock from file.
     void readStock() throws VendingMachinePersistenceException;
+
+    void addItem(Item item);
+
+    void setStock(List<Item> itemList);
 }

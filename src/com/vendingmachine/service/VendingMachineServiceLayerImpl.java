@@ -1,6 +1,8 @@
 package com.vendingmachine.service;
 
 import com.vendingmachine.dao.VendingMachineDao;
+import com.vendingmachine.dao.VendingMachinePersistenceException;
+import com.vendingmachine.dto.Change;
 import com.vendingmachine.dto.Item;
 
 import java.math.BigDecimal;
@@ -8,52 +10,76 @@ import java.util.List;
 
 public class VendingMachineServiceLayerImpl implements VendingMachineServiceLayer {
 
-    //TODO - private dao,
-    VendingMachineDao dao;
+    private final VendingMachineDao dao;
+    private final Change wallet;
 
-    // Constructor to initialize the service
-    //TODO (DAO) this.dao = dao
     public VendingMachineServiceLayerImpl(VendingMachineDao dao) {
         this.dao = dao;
-//        this.items = new HashMap<>(); // Initialize the items map
-//        this.depositedAmount = BigDecimal.ZERO; // Initialize the deposited amount to zero//to be rid
+        this.wallet = new Change();
     }
 
-    // Method to get the items map
-    //TODO-ADD checks for different inputs
+    @Override
     public List<Item> getItems() {
-        return items;
+        return dao.getAllItems();
     }
 
-    // Method to add an item to the items map
-    public void addItem(Item item) {
-        items.add(item.getName(), item);
+    @Override
+    public Item getItem(String itemName) throws VendingMachinePersistenceException {
+        return dao.getItem(itemName);
     }
 
-    // Method to deposit money
-    //TODO check for valid input
+    @Override
     public void depositMoney(BigDecimal amount) {
         dao.addMoney(amount);
     }
 
-    // Method to purchase an item
-    public String purchaseItem(String itemName) throws InsufficientFundsException, NoItemInventoryException {
-        Item selectedItem = dao.getItem(itemName); // Get the selected item
+    @Override
+    public void addItem(Item item) {
+        dao.addItem(item);
+    }
+
+    @Override
+    public BigDecimal getDepositedAmount() {
+        return dao.getDepositedAmount();
+    }
+
+    @Override
+    public void setStock(List<Item> itemList) {
+        dao.setStock(itemList);
+    }
+
+
+    public String purchaseItem(String itemName) throws InsufficientFundsException, NoItemInventoryException, VendingMachinePersistenceException {
+        Item selectedItem = dao.getItem(itemName);
         if (selectedItem == null) {
-            // If the selected item is not found in the inventory, throw an exception
             throw new NoItemInventoryException("Item not found in inventory: " + itemName);
         }
-        BigDecimal itemCost = selectedItem.getPrice(); // Get the cost of the selected item
+        BigDecimal itemCost = selectedItem.getPrice();
+        BigDecimal depositedAmount = dao.getDepositedAmount();
         if (depositedAmount.compareTo(itemCost) < 0) {
-            // If the deposited amount is less than the item cost, throw an exception
             throw new InsufficientFundsException("Insufficient funds to purchase item: " + itemName);
         }
-        // Calculate change
         BigDecimal changeAmount = depositedAmount.subtract(itemCost);
-        depositedAmount = BigDecimal.ZERO; // Reset deposited amount
+        dao.addMoney(changeAmount.negate());
         return "Change returned: $" + changeAmount;
     }
-    //TODO- validate big decimal
+
+    @Override
+    public Item removeItem(String itemId) throws VendingMachinePersistenceException {
+        List<Item> itemList = dao.getAllItems();
+        for (Item item : itemList) {
+            if (item.getName().equals(itemId)) {
+                itemList.remove(item);
+                dao.setStock(itemList);
+                return item;
+            }
+        }
+        throw new VendingMachinePersistenceException("Item not found: " + itemId);
+    }
+
+
+    // Method to deposit money
+    //TODO check for valid input
 
     // Method to display items
 //    public void displayItems() {
