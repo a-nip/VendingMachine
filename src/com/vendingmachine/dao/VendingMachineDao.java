@@ -21,13 +21,13 @@ public interface VendingMachineDao {
     Item getItem(String name) throws VendingMachinePersistenceException;
 
     //Returns all items currently saved in memory.
-    List<Item> getAllItems();
+    List<Item> getAllItems() throws VendingMachinePersistenceException;
 
     //Adds a new item to stock.
     Item addItem(String name, BigDecimal price, int quantity);
 
     //Removes an item from stock.
-    Item removeItem(String name);
+    Item removeItem(String name) throws VendingMachinePersistenceException;
 
     //Unmarshalls item from file line read-in.
     Item unmarshallItem(String itemAsText);
@@ -38,12 +38,6 @@ public interface VendingMachineDao {
     //Writes stock to file.
     void writeStock() throws VendingMachinePersistenceException;
 
-    BigDecimal getDepositedAmount();
-
     //Reads stock from file.
     void readStock() throws VendingMachinePersistenceException;
-
-    void addItem(Item item);
-
-    void setStock(List<Item> itemList);
 }
