@@ -12,67 +12,55 @@ import java.util.List;
 import java.util.Scanner;
 
 public class VendingMachineView {
-    private Scanner scanner;
+    private UserIO io;
 
     public VendingMachineView(UserIO io) {
-        scanner = new Scanner(System.in);
+        this.io = io;
     }
 
     public int displayMenuAndGetSelection() {
-        System.out.println("Vending Machine Menu:");
-        System.out.println("1. Display Items");
-        System.out.println("2. Add Money");
-        System.out.println("3. Purchase Item");
-        System.out.println("4. Add Item");
-        System.out.println("5. Exit");
-        System.out.print("Please select an option: ");
-        return scanner.nextInt();
+        io.print("Vending Machine Menu:");
+        io.print("1. Display Items");
+        io.print("2. Add Money");
+        io.print("3. Purchase Item");
+        io.print("4. Add Item");
+        io.print("5. Exit");
+        return io.readInt("Please select an option: ",1, 5);
     }
 
     public void displayItems(List<Item> itemList) {
-        System.out.println("Available Items:");
+        io.print("Available Items:");
         for (Item item : itemList) {
-            System.out.println(item.getName() + " - $" + item.getPrice());
+            io.print(item.getName()
+                    + " - $" + item.getPrice()
+                    + " (x" + item.getQuantity() + ")");
         }
     }
 
     public BigDecimal promptMoneyInput() {
-        System.out.print("Enter amount to add: $");
-        return scanner.nextBigDecimal();
+        return io.readBigDecimal("Enter amount to add: $",
+                BigDecimal.ZERO, BigDecimal.valueOf(Double.MAX_VALUE)); //Bounds to positive value
     }
 
-
-
     public void displayMessage(String message) {
-        System.out.println(message);
+        io.print(message);
     }
 
     public void displayError(String errorMessage) {
-        System.err.println("Error: " + errorMessage);
+        io.print("Error: " + errorMessage);
     }
 
-
+    public void displayBanner(String banner) {
+        io.print("=== " + banner + " ===");
+    }
 
     public BigDecimal promptItemPrice() {
-        System.out.print("Enter the price of the item: ");
-        String priceInput = scanner.nextLine();
-        try {
-            return new BigDecimal(priceInput);
-        } catch (NumberFormatException e) {
-            System.out.println("Invalid price format. Please enter a valid number.");
-            return promptItemPrice(); // Recursive call to re-prompt if input is invalid
-        }
-    }
-    public String promptItemSelection() {
-        System.out.print("Enter the name of the item you want to purchase: ");
-        scanner.nextLine();
-        return scanner.nextLine();
+        return io.readBigDecimal("Enter the price of the item: ",
+                BigDecimal.ZERO, BigDecimal.valueOf(Double.MAX_VALUE));
     }
 
     public String promptItemName() {
-        System.out.print("Enter the name of the item: ");
-        scanner.nextLine();
-        return scanner.nextLine();
+        return io.readString("Please enter an item name: ");
     }
 
 }
