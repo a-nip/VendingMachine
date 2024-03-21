@@ -8,6 +8,7 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
+//TODO: move all the print stuff to view, call view>service from Controller
 public class VendingMachineServiceImpl  implements VendingMachineServiceLayer{
     VendingMachineDao dao;
 
@@ -53,7 +54,9 @@ public class VendingMachineServiceImpl  implements VendingMachineServiceLayer{
 
         // We passed all our business rules checks so go ahead
         // and persist the Student object
-        dao.addMoney(item.getName(), item);
+        String name = item.getName();
+        String
+        dao.addItem();
 
         // The student was successfully created, now write to the audit log
 //        auditDao.writeAuditEntry(
@@ -86,8 +89,10 @@ public class VendingMachineServiceImpl  implements VendingMachineServiceLayer{
     // Method to display items
     public void displayItems() {
         System.out.println("Available Items:");
-        if(dao.get)
-        dao.getAllItems();
+        //If wallet is not empty
+        if (!(dao.getMoney().equals(BigDecimal.ZERO))) {
+            dao.getAllItems();
+        }
     }
     private void validateStudentData(Item item) throws
             VendingMachineDataValidationException {

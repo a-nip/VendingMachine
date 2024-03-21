@@ -11,7 +11,7 @@ import com.vendingmachine.service.VendingMachineDataValidationException;
 import com.vendingmachine.service.VendingMachineServiceLayer;
 import com.vendingmachine.ui.VendingMachineView;
 
-
+//TODO: move all print statements to view, all data access to service calls
 public class VendingMachineController {
     private final VendingMachineServiceLayer vendingMachineService;
     private final VendingMachineView vendingMachineView;

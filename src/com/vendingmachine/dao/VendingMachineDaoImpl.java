@@ -64,6 +64,24 @@ public class VendingMachineDaoImpl implements VendingMachineDao{
     }
 
     @Override
+    public Item addItem(String name, BigDecimal price, int quantity) {
+        Item item = new Item(name, price, quantity);
+        stock.add(item);
+        return item;
+    }
+
+    @Override
+    public Item removeItem(String name) {
+        for(Item i : stock) {
+            if(i.getName().equals(name)) {
+                i.setQuantity(i.getQuantity() - 1);
+                return i;
+            };
+        };
+        return null;
+    }
+
+    @Override
     public Item unmarshallItem(String itemAsText) {
         //Split text into tokens
         String[] itemTokens = itemAsText.split(DELIMITER);

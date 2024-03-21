@@ -23,6 +23,12 @@ public interface VendingMachineDao {
     //Returns all items currently saved in memory.
     List<Item> getAllItems();
 
+    //Adds a new item to stock.
+    Item addItem(String name, BigDecimal price, int quantity);
+
+    //Removes an item from stock.
+    Item removeItem(String name);
+
     //Unmarshalls item from file line read-in.
     Item unmarshallItem(String itemAsText);
 
