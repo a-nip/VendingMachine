@@ -15,8 +15,8 @@ import com.vendingmachine.ui.VendingMachineView;
 
 
 public class VendingMachineController {
-    private VendingMachineServiceLayer serviceLayer;
-    private VendingMachineView view;
+    private final VendingMachineServiceLayer serviceLayer;
+    private final VendingMachineView view;
 
     public VendingMachineController(VendingMachineServiceLayer serviceLayer, VendingMachineView view) {
         this.serviceLayer = serviceLayer;
@@ -59,10 +59,10 @@ public class VendingMachineController {
     }
 
     private void addMoney() {
-        BigDecimal amount = view.promptMoneyInput();
         try {
-            serviceLayer.depositMoney(amount);
-            view.displayMessage("Money added successfully.");
+            BigDecimal amount = serviceLayer.depositMoney(
+                    view.promptMoneyInput());
+            view.displayMessage("$" + amount + " added successfully.");
         } catch (Exception e) {
             view.displayError("Error occurred while adding money: " + e.getMessage());
         }

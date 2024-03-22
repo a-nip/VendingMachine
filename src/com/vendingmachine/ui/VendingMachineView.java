@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Scanner;
 
 public class VendingMachineView {
-    private UserIO io;
+    private final UserIO io;
 
     public VendingMachineView(UserIO io) {
         this.io = io;
@@ -28,6 +28,7 @@ public class VendingMachineView {
         return io.readInt("Please select an option: ",1, 5);
     }
 
+    //Displays in the format: Name - $Price (xQuantity)
     public void displayItems(List<Item> itemList) {
         io.print("Available Items:");
         for (Item item : itemList) {
@@ -50,6 +51,7 @@ public class VendingMachineView {
         io.print("Error: " + errorMessage);
     }
 
+    //Displays a title banner to declare each menu option (Obsolete? To remove or use?)
     public void displayBanner(String banner) {
         io.print("=== " + banner + " ===");
     }

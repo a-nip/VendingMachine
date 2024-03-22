@@ -20,7 +20,7 @@ public interface VendingMachineServiceLayer {
     Item removeItem(String studentId) throws
             VendingMachinePersistenceException;
 
-    void depositMoney(BigDecimal b) throws VendingMachineDataValidationException;
+    BigDecimal depositMoney(BigDecimal b) throws VendingMachineDataValidationException;
 
     String purchaseItem(String itemName) throws InsufficientFundsException, NoItemInventoryException;
 }

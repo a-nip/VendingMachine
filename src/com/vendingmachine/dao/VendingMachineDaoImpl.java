@@ -4,10 +4,19 @@ import com.vendingmachine.dto.Change;
 import com.vendingmachine.dto.Item;
 import com.vendingmachine.enums.Coins;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.math.BigDecimal;
-import java.util.*;
 import java.math.RoundingMode;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Scanner;
 
 public class VendingMachineDaoImpl implements VendingMachineDao {
     public Change wallet = new Change();
@@ -59,7 +68,6 @@ public class VendingMachineDaoImpl implements VendingMachineDao {
             }
         }
         //Return null on failure to find item.
-        System.out.println("TExt");
         return null;
     }
 

@@ -4,16 +4,13 @@ import com.vendingmachine.dao.VendingMachineDao;
 import com.vendingmachine.dao.VendingMachinePersistenceException;
 import com.vendingmachine.dto.Item;
 import com.vendingmachine.enums.Coins;
-import java.math.BigDecimal;
-import java.util.List;
+
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
-import java.math.BigDecimal;
-import java.util.List;
 
 public class VendingMachineServiceLayerImpl implements VendingMachineServiceLayer {
-    private VendingMachineDao vendingMachineDao;
+    private final VendingMachineDao vendingMachineDao;
     public VendingMachineServiceLayerImpl(VendingMachineDao vendingMachineDao) {
         this.vendingMachineDao = vendingMachineDao;
     }
@@ -35,8 +32,8 @@ public class VendingMachineServiceLayerImpl implements VendingMachineServiceLaye
         return vendingMachineDao.removeItem(itemName);
     }
     @Override
-    public void depositMoney(BigDecimal amount) throws VendingMachineDataValidationException {
-        vendingMachineDao.addMoney(amount);
+    public BigDecimal depositMoney(BigDecimal amount) throws VendingMachineDataValidationException {
+        return vendingMachineDao.addMoney(amount);
     }
     @Override
     public String purchaseItem(String itemName) throws InsufficientFundsException, NoItemInventoryException {
